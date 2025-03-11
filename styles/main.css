@@ -80,7 +80,7 @@ main {
 .drum-kit {
     position: relative;
     width: 100%;
-    max-width: 800px;
+    max-width: 700px; /* Reduced from 800px */
     height: 500px;
     transform-style: preserve-3d;
     transform: rotateX(20deg);
@@ -139,6 +139,7 @@ main {
     border-radius: 4px;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     pointer-events: none;
+    transition: font-size 0.2s ease, padding 0.2s ease;
 }
 
 /* Special positioning for hi-hat labels */
@@ -151,6 +152,21 @@ main {
 /* Additional positioning for hi-hat-closed label */
 .drum-element[data-piece-id="hi-hat-closed"] .key-label {
     top: 0px;
+}
+
+/* Responsive positioning for hi-hat labels */
+@media (max-width: 600px) {
+    .drum-element[data-piece-id="hi-hat-closed"] .key-label,
+    .drum-element[data-piece-id="hi-hat-open"] .key-label {
+        left: -10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .drum-element[data-piece-id="hi-hat-closed"] .key-label,
+    .drum-element[data-piece-id="hi-hat-open"] .key-label {
+        left: -5px;
+    }
 }
 
 /* Specific drum styles */
@@ -459,19 +475,120 @@ main {
     
     .drum-kit {
         height: 400px;
+        max-width: 600px; /* Reduced width for tablets */
     }
     
-    .drum, .cymbal {
-        transform: scale(0.8);
+    /* Adjust drum sizes for better fit */
+    .drum-element[data-piece-id="kick"] {
+        width: 130px;
+        height: 130px;
+    }
+    
+    .drum-element[data-piece-id="snare"] {
+        width: 90px;
+        height: 70px;
+    }
+    
+    .drum-element[data-piece-id="crash"],
+    .drum-element[data-piece-id="ride"] {
+        width: 110px;
+        height: 110px;
+    }
+}
+
+@media (max-width: 600px) {
+    .drum-kit {
+        height: 350px;
+        max-width: 500px; /* Further reduced width for smaller tablets */
+    }
+    
+    /* Further reduce drum sizes */
+    .drum-element[data-piece-id="kick"] {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .drum-element[data-piece-id="snare"] {
+        width: 80px;
+        height: 60px;
+    }
+    
+    .drum-element[data-piece-id="crash"],
+    .drum-element[data-piece-id="ride"] {
+        width: 100px;
+        height: 100px;
     }
 }
 
 @media (max-width: 480px) {
     .drum-kit {
         height: 300px;
+        max-width: 400px; /* Reduced width for mobile */
     }
     
-    .drum, .cymbal {
-        transform: scale(0.6);
+    /* Smaller drums for mobile */
+    .drum-element[data-piece-id="kick"] {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .drum-element[data-piece-id="snare"] {
+        width: 70px;
+        height: 50px;
+    }
+    
+    .drum-element[data-piece-id="hi-hat-closed"],
+    .drum-element[data-piece-id="hi-hat-open"] {
+        width: 80px;
+        height: 15px !important;
+    }
+    
+    .drum-element[data-piece-id="tom1"],
+    .drum-element[data-piece-id="tom2"],
+    .drum-element[data-piece-id="tom"] {
+        width: 70px;
+        height: 50px;
+    }
+    
+    .drum-element[data-piece-id="floor-tom"] {
+        width: 80px;
+        height: 60px;
+    }
+    
+    .drum-element[data-piece-id="crash"],
+    .drum-element[data-piece-id="ride"] {
+        width: 90px;
+        height: 90px;
+    }
+    
+    /* Smaller key labels for mobile */
+    .key-label {
+        font-size: 1rem;
+        padding: 1px 6px;
+    }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+    .drum-kit {
+        height: 250px;
+        max-width: 320px; /* Reduced width for very small devices */
+    }
+    
+    /* Even smaller drums for very small devices */
+    .drum-element[data-piece-id="kick"] {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .drum-element[data-piece-id="snare"] {
+        width: 60px;
+        height: 40px;
+    }
+    
+    .drum-element[data-piece-id="crash"],
+    .drum-element[data-piece-id="ride"] {
+        width: 70px;
+        height: 70px;
     }
 }
