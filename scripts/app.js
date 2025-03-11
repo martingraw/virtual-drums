@@ -117,6 +117,18 @@ function loadDrumKit(kitId) {
         return;
     }
     
+    // Get the drum kit container dimensions
+    const containerWidth = drumKitElement.clientWidth;
+    const containerHeight = drumKitElement.clientHeight;
+    
+    // Base dimensions used in the drum kit definitions
+    const baseWidth = 800;
+    const baseHeight = 500;
+    
+    // Calculate scaling factors
+    const scaleX = containerWidth / baseWidth;
+    const scaleY = containerHeight / baseHeight;
+    
     // Create visual elements for each drum piece
     kit.pieces.forEach(piece => {
         const drumElement = document.createElement('div');
@@ -124,11 +136,20 @@ function loadDrumKit(kitId) {
         drumElement.dataset.pieceId = piece.id;
         drumElement.dataset.key = piece.key;
         
+        // Scale position and size based on container size
+        const scaledX = piece.position.x * scaleX;
+        const scaledY = piece.position.y * scaleY;
+        
+        // Calculate scaled size (use the smaller of the two scaling factors to maintain proportions)
+        const sizeScale = Math.min(scaleX, scaleY);
+        const scaledWidth = piece.size.width * sizeScale;
+        const scaledHeight = piece.size.height * sizeScale;
+        
         // Set position and size
-        drumElement.style.left = `${piece.position.x - piece.size.width / 2}px`;
-        drumElement.style.top = `${piece.position.y - piece.size.height / 2}px`;
-        drumElement.style.width = `${piece.size.width}px`;
-        drumElement.style.height = `${piece.size.height}px`;
+        drumElement.style.left = `${scaledX - scaledWidth / 2}px`;
+        drumElement.style.top = `${scaledY - scaledHeight / 2}px`;
+        drumElement.style.width = `${scaledWidth}px`;
+        drumElement.style.height = `${scaledHeight}px`;
         
         // Set color if specified
         if (piece.color) {
@@ -139,6 +160,27 @@ function loadDrumKit(kitId) {
         const keyLabel = document.createElement('span');
         keyLabel.className = 'key-label';
         keyLabel.textContent = piece.key.toUpperCase();
+        
+        // Scale key label size based on drum size
+        if (sizeScale < 0.8) {
+            keyLabel.style.fontSize = `${Math.max(0.8, sizeScale)}rem`;
+            keyLabel.style.padding = '1px 6px';
+        }
+        
+        // Adjust hi-hat label positions for smaller screens
+        if ((piece.id === 'hi-hat-closed' || piece.id === 'hi-hat-open') && containerWidth < 500) {
+            // For very small screens, position the labels closer to the hi-hat
+            const topPosition = piece.id === 'hi-hat-closed' ? '0px' : '-20px';
+            keyLabel.style.top = topPosition;
+            
+            // Adjust left position based on container width
+            if (containerWidth < 400) {
+                keyLabel.style.left = '-5px';
+            } else {
+                keyLabel.style.left = '-10px';
+            }
+        }
+        
         drumElement.appendChild(keyLabel);
         
         // Add click event listener
@@ -164,9 +206,33 @@ function loadDrumKit(kitId) {
 }
 
 /**
+ * Debounce function to limit how often a function is called
+ * @param {Function} func - The function to debounce
+ * @param {number} wait - The debounce wait time in milliseconds
+ * @returns {Function} - The debounced function
+ */
+function debounce(func, wait) {
+    let timeout;
+    return function() {
+        const context = this;
+        const args = arguments;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func.apply(context, args);
+        }, wait);
+    };
+}
+
+/**
  * Set up event listeners for user interactions
  */
 function setupEventListeners() {
+    // Window resize event for responsive layout (with debounce)
+    window.addEventListener('resize', debounce(() => {
+        // Reload the current drum kit to reposition elements
+        loadDrumKit(currentKit);
+    }, 250)); // 250ms debounce time
+    
     // Kit selection
     kitSelectElement.addEventListener('change', (event) => {
         const newKit = event.target.value;
