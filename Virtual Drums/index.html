@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtual Drums Studio</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Allow embedding from any domain -->
+    <meta http-equiv="Content-Security-Policy" content="frame-ancestors *">
+    
+    <script>
+        // Check if we're in an iframe
+        window.isEmbedded = window.self !== window.top;
+        console.log("Is embedded in iframe:", window.isEmbedded);
+    </script>
+</head>
+<body>
+    <header>
+        <h2>Virtual Drums Studio</h2>
+        <div class="controls-top">
+            <div class="kit-selector">
+                <label for="kit-select">Drum Kit:</label>
+                <select id="kit-select">
+                    <option value="standard">Standard Kit</option>
+                    <option value="acoustic">Acoustic Kit</option>
+                    <option value="electronic">Electronic Kit</option>
+                    <option value="rock">Rock Kit</option>
+                    <option value="jazz">Jazz Kit</option>
+                </select>
+            </div>
+            <div class="master-volume">
+                <label for="volume-control">Volume:</label>
+                <input type="range" id="volume-control" min="0" max="100" value="80">
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="drum-container">
+            <div class="drum-kit" id="drum-kit">
+                <!-- Drum elements will be added dynamically via JavaScript -->
+            </div>
+            <div id="audio-init-overlay" class="audio-init-overlay">
+                <div class="audio-init-message">
+                    <h3>Click anywhere to start</h3>
+                    <p>Web Audio needs user interaction to start</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="panel-section">
+                <button id="toggle-shortcuts" class="control-btn">
+                    <i class="fas fa-keyboard"></i> Show Shortcuts
+                </button>
+                <button id="toggle-metronome" class="control-btn">
+                    <i class="fas fa-clock"></i> Metronome
+                </button>
+            </div>
+            
+            <div class="panel-section recording-controls">
+                <div class="tempo-control">
+                    <label for="tempo-slider">Tempo: <span id="tempo-value">120</span> BPM</label>
+                    <input type="range" id="tempo-slider" min="40" max="240" value="120">
+                </div>
+                <button id="record-btn" class="control-btn">
+                    <i class="fas fa-circle"></i> Record
+                </button>
+                <button id="play-btn" class="control-btn" disabled>
+                    <i class="fas fa-play"></i> Play
+                </button>
+                <button id="stop-btn" class="control-btn" disabled>
+                    <i class="fas fa-stop"></i> Stop
+                </button>
+                <button id="export-midi" class="control-btn" disabled>
+                    <i class="fas fa-download"></i> Export MIDI
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>Created by <a href="https://www.jscalco.com/" target="_blank" rel="noopener noreferrer">jscalco.com</a></p>
+    </footer>
+
+    <div id="keyboard-shortcuts" class="shortcuts-overlay hidden">
+        <div class="shortcuts-container">
+            <h2>Keyboard Shortcuts</h2>
+            <div class="shortcuts-grid">
+                <!-- Shortcuts will be added dynamically via JavaScript -->
+            </div>
+            <button id="close-shortcuts" class="close-btn">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tone@14.7.77/build/Tone.min.js"></script>
+    <script src="scripts/drumKits.js"></script>
+    <script src="scripts/audioEngine.js"></script>
+    <script src="scripts/midiHandler.js"></script>
+    <script src="scripts/app.js"></script>
+</body>
+</html>
