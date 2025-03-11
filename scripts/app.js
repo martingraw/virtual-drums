@@ -142,8 +142,14 @@ function loadDrumKit(kitId) {
         
         // Calculate scaled size (use the smaller of the two scaling factors to maintain proportions)
         const sizeScale = Math.min(scaleX, scaleY);
-        const scaledWidth = piece.size.width * sizeScale;
-        const scaledHeight = piece.size.height * sizeScale;
+        let scaledWidth = piece.size.width * sizeScale;
+        let scaledHeight = piece.size.height * sizeScale;
+        
+        // Special handling for hi-hats to maintain their flat shape
+        if (piece.id === 'hi-hat-closed' || piece.id === 'hi-hat-open') {
+            // Keep hi-hats flat by maintaining a low height
+            scaledHeight = Math.min(20, scaledHeight);
+        }
         
         // Set position and size
         drumElement.style.left = `${scaledX - scaledWidth / 2}px`;
