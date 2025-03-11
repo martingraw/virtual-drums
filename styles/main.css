@@ -1,0 +1,477 @@
+/* Main Styles for Virtual Drums Studio */
+
+:root {
+    --primary-color: #3a86ff;
+    --secondary-color: #ff006e;
+    --background-color: #f8f9fa;
+    --drum-color: #e63946;
+    --cymbal-color: #ffb703;
+    --text-color: #212529;
+    --panel-bg: #ffffff;
+    --border-color: #dee2e6;
+    --success-color: #38b000;
+    --warning-color: #ffaa00;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+header {
+    background-color: var(--panel-bg);
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+    font-size: 2rem;
+}
+
+.controls-top {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 0.5rem;
+}
+
+.kit-selector, .master-volume {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+select, input[type="range"] {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+}
+
+.drum-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+    perspective: 1000px;
+}
+
+.drum-kit {
+    position: relative;
+    width: 100%;
+    max-width: 800px;
+    height: 500px;
+    transform-style: preserve-3d;
+    transform: rotateX(20deg);
+    border: 1px solid #333;
+    margin: 0 auto;
+    overflow: visible;
+    background-color: #222;
+    background-image: radial-gradient(circle at center, #444 0%, #222 100%);
+    border-radius: 10px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Drum elements styling */
+.drum-element {
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 0.05s ease; /* Faster initial transition */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    user-select: none;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    will-change: transform; /* Hint to browser to optimize animations */
+}
+
+.drum-element.drum {
+    background-color: transparent;
+    border: none;
+}
+
+.drum-element.cymbal {
+    background-color: transparent;
+    border: none;
+}
+
+.drum-element.active {
+    transform: scale(0.95);
+    transition: transform 0.05s ease; /* Faster animation for better responsiveness */
+}
+
+.key-label {
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    pointer-events: none;
+}
+
+/* Special positioning for hi-hat labels */
+.drum-element[data-piece-id="hi-hat-closed"] .key-label,
+.drum-element[data-piece-id="hi-hat-open"] .key-label {
+    left: -15px;
+    transform: translateX(0);
+}
+
+/* Additional positioning for hi-hat-closed label */
+.drum-element[data-piece-id="hi-hat-closed"] .key-label {
+    top: 0px;
+}
+
+/* Specific drum styles */
+.drum-element[data-piece-id="kick"] {
+    background: radial-gradient(circle at center, #444 0%, #222 100%);
+    border: 8px solid #666;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.7), inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.drum-element[data-piece-id="snare"] {
+    background: linear-gradient(to bottom, #f5f5f5 0%, #e0e0e0 100%);
+    border: 5px solid #d0d0d0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.drum-element[data-piece-id="hi-hat-closed"],
+.drum-element[data-piece-id="hi-hat-open"] {
+    background: radial-gradient(circle at center, #f0d080 0%, #d4af37 100%);
+    border: 2px solid #b8860b;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    height: 100px !important;
+}
+
+.drum-element[data-piece-id="tom1"],
+.drum-element[data-piece-id="tom2"] {
+    background: radial-gradient(circle at center, #800000 0%, #600000 100%);
+    border: 5px solid #a0a0a0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.drum-element[data-piece-id="floor-tom"] {
+    background: radial-gradient(circle at center, #800000 0%, #600000 100%);
+    border: 6px solid #a0a0a0;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.drum-element[data-piece-id="crash"],
+.drum-element[data-piece-id="ride"] {
+    background: radial-gradient(circle at center, #f0d080 0%, #d4af37 100%);
+    border: 2px solid #b8860b;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Add a center dot to cymbals */
+.drum-element[data-piece-id="crash"]::after,
+.drum-element[data-piece-id="ride"]::after,
+.drum-element[data-piece-id="hi-hat-closed"]::after,
+.drum-element[data-piece-id="hi-hat-open"]::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20%;
+    height: 20%;
+    background-color: #333;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+/* Specific drum types */
+.drum-element[data-piece-id="kick"] {
+    width: 150px;
+    height: 150px;
+}
+
+.drum-element[data-piece-id="snare"] {
+    width: 100px;
+    height: 80px;
+}
+
+.drum-element[data-piece-id="hi-hat-closed"],
+.drum-element[data-piece-id="hi-hat-open"] {
+    width: 100px;
+    height: 20px;
+}
+
+.drum-element[data-piece-id="tom1"],
+.drum-element[data-piece-id="tom2"],
+.drum-element[data-piece-id="tom"] {
+    width: 90px;
+    height: 70px;
+}
+
+.drum-element[data-piece-id="floor-tom"] {
+    width: 110px;
+    height: 90px;
+}
+
+.drum-element[data-piece-id="crash"],
+.drum-element[data-piece-id="ride"] {
+    width: 120px;
+    height: 120px;
+}
+
+
+.controls-panel {
+    background-color: var(--panel-bg);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.panel-section {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.panel-section:last-child {
+    margin-bottom: 0;
+}
+
+.recording-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.tempo-control {
+    display: flex;
+    flex-direction: column;
+    margin-right: 1rem;
+}
+
+.control-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: background-color 0.2s;
+}
+
+.control-btn:hover {
+    background-color: #2a75e6;
+}
+
+.control-btn:disabled {
+    background-color: #a0a0a0;
+    cursor: not-allowed;
+}
+
+#record-btn {
+    background-color: var(--secondary-color);
+}
+
+#record-btn:hover {
+    background-color: #e6005f;
+}
+
+#record-btn.recording {
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        background-color: var(--secondary-color);
+    }
+    50% {
+        background-color: #ff4d94;
+    }
+    100% {
+        background-color: var(--secondary-color);
+    }
+}
+
+/* Audio initialization overlay */
+.audio-init-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    cursor: pointer;
+}
+
+.audio-init-overlay.hidden {
+    display: none;
+}
+
+.audio-init-message {
+    background-color: var(--panel-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.audio-init-message h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+/* Keyboard shortcuts overlay */
+.shortcuts-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.shortcuts-overlay.hidden {
+    display: none;
+}
+
+.shortcuts-container {
+    background-color: var(--panel-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 800px;
+    width: 90%;
+    position: relative;
+}
+
+.shortcuts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.shortcut-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.key {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 0.5rem;
+    min-width: 30px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+}
+
+/* Footer styles */
+.site-footer {
+    background-color: var(--panel-bg);
+    padding: 1rem;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1rem;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.site-footer p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.site-footer a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s;
+}
+
+.site-footer a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .controls-top {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .panel-section {
+        flex-wrap: wrap;
+    }
+    
+    .drum-kit {
+        height: 400px;
+    }
+    
+    .drum, .cymbal {
+        transform: scale(0.8);
+    }
+}
+
+@media (max-width: 480px) {
+    .drum-kit {
+        height: 300px;
+    }
+    
+    .drum, .cymbal {
+        transform: scale(0.6);
+    }
+}
