@@ -187,7 +187,8 @@ main {
     background: radial-gradient(circle at center, #f0d080 0%, #d4af37 100%);
     border: 2px solid #b8860b;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    height: 100px !important;
+    /* Maintain aspect ratio - hi-hats should be flat circles */
+    height: 20px !important;
 }
 
 .drum-element[data-piece-id="tom1"],
@@ -464,9 +465,12 @@ main {
 
 /* Responsive styles */
 @media (max-width: 768px) {
+    /* Keep controls on one line */
     .controls-top {
-        flex-direction: column;
-        gap: 1rem;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
     }
     
     .panel-section {
